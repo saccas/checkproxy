@@ -1,4 +1,4 @@
-module alertproxy
+module checkproxy
 
 go 1.18
 
