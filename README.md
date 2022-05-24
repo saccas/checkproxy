@@ -18,9 +18,3 @@ in the HTTP checker.
 
 `checkproxy` can easily be deployed as Azure Function or AWS Lambda.
 
-## TODO
-
-In order to make use of this some improvements must be made:
-
-* Currently the checks received via POST endpoint are only stored in-memory. This data must be persisted, for example on an object storage.
-* All endpoints are unprotected. At least some simple token-based authorization must be implemented.
