@@ -10,6 +10,7 @@ import (
 // Config holds the whole configuration.
 type Config struct {
 	PersistanceBase string `yaml:"presistance_base"`
+	PathPrefix      string `yaml:"path_prefix"`
 	Auth            struct {
 		RWTokens []string `yaml:"rw_tokens"`
 		WTokens  []string `yaml:"w_tokens"`

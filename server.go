@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/apex/gateway"
 	"github.com/gorilla/mux"
@@ -35,20 +36,34 @@ func NewServer(listener string, c *Config) Server {
 
 	r := mux.NewRouter().StrictSlash(true)
 	routes := s.Routes()
-	routes.Populate(r, "")
+	routes.Populate(r, c.PathPrefix)
 	s.handler = alice.New(s.LoggerMiddleware).Then(r)
 	return s
 }
 
 // run launches the actual web server. If no listener is provided (as flag) the server is
 // lauched as a AWL Lambda.
-func (s Server) run() {
-	if s.listener != "" {
-		fmt.Printf("Serving at http://%s\nPress CTRL-c to stop...\n", s.listener)
-		log.Fatal(http.ListenAndServe(s.listener, s.handler))
-	} else {
-		fmt.Printf("Serving as lambda...\n")
-		log.Fatal(gateway.ListenAndServe(s.listener, s.handler))
+func (s Server) run(mode string) error {
+	switch strings.ToLower(mode) {
+	case "local":
+		if s.listener == "" {
+			return fmt.Errorf("No listener defined")
+		}
+		fmt.Sprintf("Running locally at '%s'...\n", s.listener)
+		return http.ListenAndServe(s.listener, s.handler)
+	case "azurefunc":
+		port, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT")
+		if !ok {
+			return fmt.Errorf("Environment FUNCTIONS_CUSTOMHANDLER_PORT not defined")
+		}
+		listener := fmt.Sprintf(":%s", port)
+		fmt.Sprintf("Running as Azure Function at '%s'...\n", listener)
+		return http.ListenAndServe(listener, s.handler)
+	case "awslambda":
+		fmt.Sprintf("Running as AWS Lambda...\n")
+		return gateway.ListenAndServe(s.listener, s.handler)
+	default:
+		return fmt.Errorf("Unknown mode '%s'", mode)
 	}
 }
 
