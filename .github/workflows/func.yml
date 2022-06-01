@@ -32,8 +32,7 @@ jobs:
         uses: montudor/action-zip@v1
       -
         name: Zip
-        with:
-          args: zip -qq -r azure_function.zip .
+        run: zip -qq -r azure_function.zip .
         working-directory: package/
       -
         name: Upload
