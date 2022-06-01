@@ -42,7 +42,28 @@ jobs:
         working-directory: package/
       -
         name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v1
         with:
           name: azure_function.zip
           path: package/azure_function.zip
+      -
+        name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Azure Function ${{ github.ref }}
+          draft: false
+          prerelease: false
+      -
+        name: upload linux artifact
+        uses: actions/upload-release-asset@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: package/azure_function.zip
+          asset_name: azure_function.zip
+          asset_content_type: application/zip
