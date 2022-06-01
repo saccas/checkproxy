@@ -22,6 +22,10 @@ jobs:
       -
         name: Build
         run: go build -v ./...
+        env:
+          GOOS: linux
+          GOARCH: amd64
+          CGO_ENABLED: 0
       -
         name: Prepare
         run: |
@@ -38,6 +42,7 @@ jobs:
         working-directory: package/
       -
         name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: package/azure_function.zip
+          name: azure_function.zip
+          path: package/azure_function.zip
