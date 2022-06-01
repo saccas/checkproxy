@@ -73,6 +73,13 @@ curl -XPOST --data-binary '{"ok": true}' 'http://{BASE_URL}/checks/{check_name}?
 ```
 
 Note the that the required query parameter `status` allows to specify the status code that will be provided on a `GET` request.
+
 The optional `validity_duration` query parameter allows to specify a duration during which the result will be stored. After this duration, a
 `Gateway Timeout` will be returned in order to prevent a state to be returned to infinity. Default is 10m. Refer to the [official Go documentation](https://pkg.go.dev/time#ParseDuration)
 to learn in which format the duration can be provided.
+
+To query the result, simply use a `GET` request on the same URL (without any query parameters):
+
+```
+curl -XGET 'http://{BASE_URL}/checks/{check_name}' -H 'X-Auth-Token:{token}' -v
+```
