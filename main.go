@@ -18,7 +18,7 @@ type App struct {
 
 func main() {
 	var app App
-	flag.StringVar(&app.address, "a", "", "ip:port to listen on (runs as lambda if empty)")
+	flag.StringVar(&app.address, "a", "", "ip:port to listen on when run locally")
 	flag.StringVar(&app.configFile, "c", "./config.yaml", "name of the config file")
 	flag.StringVar(&app.mode, "m", "local", "mode, can me either 'local', 'azurefunc' or 'awslambda'")
 	flag.BoolVar(&app.version, "v", false, "print version information")
