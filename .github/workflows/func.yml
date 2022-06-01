@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 jobs:
-  goreleaser:
+  buildfunc:
     runs-on: ubuntu-latest
     steps:
       -
@@ -28,7 +28,7 @@ jobs:
           mkdir package
           cp checkproxy package/
           cp README.md package/
-          cp misc/azure_func/* package/
+          cp -r misc/azure_func/* package/
       -
         name: Install Zip
         uses: montudor/action-zip@v1
