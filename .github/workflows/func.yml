@@ -1,0 +1,40 @@
+name: Azure Func
+
+on:
+  create:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      -
+        name: Set up Go
+        uses: actions/setup-go@v3
+      -
+        name: Build
+        run: go build -v ./...
+      -
+        name: Prepare
+        run: |
+          mkdir package
+          cp checkproxy package/
+          cp README.md package/
+          cp misc/azure_func/* package/
+      -
+        name: Zip
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r azure_function.zip .
+        working-directory: package/
+      -
+        name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: package/azure_function.zip
