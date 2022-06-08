@@ -11,7 +11,7 @@ import (
 
 func (s Server) Store(res http.ResponseWriter, req *http.Request) {
 	// Check auth header
-	if !s.Auth("w", req.Header) {
+	if !s.Auth(authWrite, req.Header) {
 		s.respond(res, req, http.StatusUnauthorized, "access denied")
 		return
 	}

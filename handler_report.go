@@ -8,7 +8,7 @@ import (
 )
 
 func (s Server) Report(res http.ResponseWriter, req *http.Request) {
-	if !s.Auth("r", req.Header) {
+	if !s.Auth(authRead, req.Header) {
 		s.respond(res, req, http.StatusUnauthorized, "access denied")
 		return
 	}
