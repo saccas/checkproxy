@@ -49,7 +49,7 @@ func (s Server) run(mode string) error {
 		if s.listener == "" {
 			return fmt.Errorf("No listener defined")
 		}
-		fmt.Sprintf("Running locally at '%s'...\n", s.listener)
+		fmt.Printf("Running locally at '%s'...\n", s.listener)
 		return http.ListenAndServe(s.listener, s.handler)
 	case "azurefunc":
 		port, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT")
@@ -57,10 +57,10 @@ func (s Server) run(mode string) error {
 			return fmt.Errorf("Environment FUNCTIONS_CUSTOMHANDLER_PORT not defined")
 		}
 		listener := fmt.Sprintf(":%s", port)
-		fmt.Sprintf("Running as Azure Function at '%s'...\n", listener)
+		fmt.Printf("Running as Azure Function at '%s'...\n", listener)
 		return http.ListenAndServe(listener, s.handler)
 	case "awslambda":
-		fmt.Sprintf("Running as AWS Lambda...\n")
+		fmt.Printf("Running as AWS Lambda...\n")
 		return gateway.ListenAndServe(s.listener, s.handler)
 	default:
 		return fmt.Errorf("Unknown mode '%s'", mode)
